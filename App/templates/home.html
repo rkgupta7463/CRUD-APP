@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block mainblock %}
+<style>
+    #create label {
+        color: aliceblue;
+    }
+</style>
+<div class="row row-col-2 m-2">
+    <div class="col-6 bg-danger p-2">
+        <h4 class="text-center text-white">Create Student list by fill the form below</h4>
+        <form method="post" id="create">
+            {% csrf_token %} {{form}}
+            <input type="submit" class="btn btn-info mt-2" value="Submit">
+        </form>
+    </div>
+    <div class="col-6 bg-dark">
+        <h3 class="text-center text-white">Students List</h3>
+        <table class="table text-center text-white">
+            <thead>
+                <tr>
+                    <th scope="col ">S.No</th>
+                    <th scope="col ">Name</th>
+                    <th scope="col ">Email</th>
+                    <th scope="col ">Phone</th>
+                    <th scope="col ">Branch</th>
+                    <th scope="col ">College</th>
+                    <th scope="col ">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in viewdb %}
+                <tr>
+                    <th scope="row ">{{v.id}}</th>
+                    <td>{{v.sname}}</td>
+                    <td>{{v.semail}}</td>
+                    <td>{{v.phone}}</td>
+                    <td>{{v.Branch}}</td>
+                    <td>{{v.college}}</td>
+                    <td style="display: flex;padding: 11.5px;"><a href="{% url 'update' v.id %}" class="btn bg-white" style="margin:2px">Edit</a>
+                        <a href="{% url 'delete' v.id %}" class="btn bg-danger" style="margin:2px">Delete</a></td>
+                    <!-- <a href="{% url 'update' v.id %}" class="btn bg-white">Edit</a>
+                        <a href="{% url 'delete' v.id %}" class="btn bg-danger">Delete</a> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock mainblock %}
+</body>
+
+</html>
