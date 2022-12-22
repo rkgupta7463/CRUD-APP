@@ -4,15 +4,20 @@
         color: aliceblue;
     }
 </style>
+{% if messages %} {% for message in messages %}
+<div {% if message.tags %} class="alert alert-{{message.tags}} text-center" role="alert" {% endif %}>
+    {{message}}
+</div>
+{% endfor %} {% endif %}
 <div class="row row-col-2 m-2">
-    <div class="col-6 bg-danger p-2">
+    <div class="col-5 bg-danger p-2">
         <h4 class="text-center text-white">Create Student list by fill the form below</h4>
         <form method="post" id="create">
             {% csrf_token %} {{form}}
             <input type="submit" class="btn btn-info mt-2" value="Submit">
         </form>
     </div>
-    <div class="col-6 bg-dark">
+    <div class="col-7 bg-dark">
         <h3 class="text-center text-white">Students List</h3>
         <table class="table text-center text-white">
             <thead>
@@ -36,7 +41,8 @@
                     <td>{{v.Branch}}</td>
                     <td>{{v.college}}</td>
                     <td style="display: flex;padding: 11.5px;"><a href="{% url 'update' v.id %}" class="btn bg-white" style="margin:2px">Edit</a>
-                        <a href="{% url 'delete' v.id %}" class="btn bg-danger" style="margin:2px">Delete</a></td>
+                        <a href="{% url 'delete' v.id %}" class="btn bg-danger" style="margin:2px">Delete</a>
+                    </td>
                     <!-- <a href="{% url 'update' v.id %}" class="btn bg-white">Edit</a>
                         <a href="{% url 'delete' v.id %}" class="btn bg-danger">Delete</a> -->
                 </tr>
