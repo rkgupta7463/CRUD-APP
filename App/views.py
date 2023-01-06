@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .forms import *
 from .models import *
 from django.contrib import messages
@@ -7,29 +7,34 @@ from django.contrib import messages
 
 
 def home(request):
-    fm = StudentInfoForm()
-    viewdb = StudentDB.objects.all()
-    if request.method == "POST":
-        fm = StudentInfoForm(request.POST)
-        if fm.is_valid:
-            name = request.POST['sname']
-            email = request.POST['semail']
-            Phone = request.POST['phone']
-            Brnach = request.POST['Branch']
-            College = request.POST['college']
-
-            dbsave = StudentDB(sname=name, semail=email,
-                               phone=Phone, Branch=Brnach, college=College)
-            dbsave.save()
-            fm = StudentInfoForm()
-            messages.success(request, "Your list have created!")
-    else:
+    request.session['name'] = 'Rishu'
+    if 'name' in request.session:
+        request.session.modified = True
         fm = StudentInfoForm()
-    context = {
-        'form': fm,
-        'viewdb': viewdb
-    }
-    return render(request, 'home.html', context)
+        viewdb = StudentDB.objects.all()
+        if request.method == "POST":
+            fm = StudentInfoForm(request.POST)
+            if fm.is_valid:
+                name = request.POST['sname']
+                email = request.POST['semail']
+                Phone = request.POST['phone']
+                Brnach = request.POST['Branch']
+                College = request.POST['college']
+
+                dbsave = StudentDB(sname=name, semail=email,
+                                   phone=Phone, Branch=Brnach, college=College)
+                dbsave.save()
+                fm = StudentInfoForm()
+                messages.success(request, "Your list have created!")
+        else:
+            fm = StudentInfoForm()
+        context = {
+            'form': fm,
+            'viewdb': viewdb
+        }
+        return render(request, 'home.html', context)
+    else:
+        return HttpResponse("Your session has expired........!")
 
 # update function
 
@@ -49,9 +54,9 @@ def update(request, uid):
 
 # delete function
 
+def delete(request,pk):
+    member = StudentDB.objects.get(id=pk)
+    member.delete()
+    messages.success(request,"Data Deleted!")
+    return redirect("home")
 
-def delete(request, pk):
-    deldata = StudentDB.objects.get(id=pk)
-    deldata.delete()
-    messages.warning(request, "Your data deleted!")
-    return redirect('home')
